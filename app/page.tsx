@@ -203,7 +203,10 @@ export default function Home() {
 
       <footer className="mt-14 border-t border-line pt-5 text-xs text-ink-faint">
         Dealwijs is een informatieve rekentool — geen financieel, fiscaal of juridisch advies.
-        Woningdata via Altum AI (Kadaster-bronnen). Cijfers zijn indicatief; controleer vóór aankoop alles met je adviseur.
+        Woningdata via Altum AI (Kadaster-bronnen). Cijfers zijn indicatief; controleer vóór aankoop alles met je adviseur.{" "}
+        <a href="/privacy" className="underline underline-offset-2 hover:text-ink-soft">
+          Privacy
+        </a>
       </footer>
     </main>
   );

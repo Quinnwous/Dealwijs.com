@@ -7,6 +7,8 @@ Bijgewerkt: 10 juni 2026, avond. Alles hieronder blokkeert een stap uit het
 Bij een registrar naar keuze (TransIP, Versio, ...). Check daar ook of `dealwijs.com`
 echt vrij is en neem 'm mee als dat zo is. **Waarom eerst:** naam claimen vóór de
 eerste post; alles hierna hangt aan het domein.
+Stel meteen e-mailforwarding in: `privacy@dealwijs.nl` → je eigen mail (de
+privacypagina verwijst ernaar; bij de meeste registrars 2 min werk).
 
 ## 2. Vercel-account aanmaken — ~5 min, gratis
 Op [vercel.com](https://vercel.com) (inloggen met GitHub kan handig zijn, zie #5).

@@ -62,6 +62,7 @@ grof. Elke week wordt de eerstvolgende maand-regel uitgewerkt naar weekregels.
 - [x] Eerste git-commit (versiebeheer aan)
 - [x] SEO-basics: robots, sitemap, metadata, JSON-LD (klaar vóór deploy)
 - [x] Validatie-kit + "Deal van de week"-draaiboek voorbereid ([groei/](groei/))
+- [x] Voorbeeldrapport-flow: demo zonder Altum-kosten (beschermt unit-economics)
 - [ ] `dealwijs.nl` registreren (+ `.com` indien vrij) — ~€10/jr, 5 min → [actielijst](actielijst-quinn.md)
 
 ### Week 25 · 15–21 jun — Live
