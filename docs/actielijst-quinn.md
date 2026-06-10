@@ -28,6 +28,12 @@ De MX-records van dealwijs.com wijzen correct naar ImprovMX ✅ (gecheckt
 `privacy@dealwijs.com`. De privacypagina verwijst naar het .com-adres,
 dus dealwijs.nl heeft geen mail nodig.
 
+### 3. Optioneel: `ALTUM_API_KEY` ook op Preview — 1 min
+Staat nu alleen op Production. Preview-deploys (bijv. van een feature-branch)
+kunnen daardoor geen echte woningdata ophalen. Alleen nodig als je
+preview-deploys met echte data wilt testen. Zeg "zet de Altum-key ook op
+Preview" tegen Claude, of doe het zelf in het Vercel-dashboard.
+
 ## ⏸ Geparkeerd (tot het product beter is)
 
 - **Marketingvriend inplannen** voor de eerste "Deal van de week"-video.
