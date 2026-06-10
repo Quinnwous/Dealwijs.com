@@ -12,22 +12,25 @@ Bijgewerkt: 10 juni 2026, na deploy. De site is live op
 
 ## ☐ Nog te doen
 
-### 1. DNS-records instellen bij TransIP — 2 min
-TransIP-controlepaneel → Domeinen → klik het domein → **DNS**. Voeg per domein toe:
+### 1. Nameservers omzetten naar Vercel — 2 min per domein
+Voor **dealwijs.nl** én **dealwijs.com**, in het TransIP-controlepaneel:
+Domeinen → klik het domein → kopje **Domeinbeheer** → zet **TransIP-instellingen
+UIT** (er verschijnt "Geavanceerd domeinbeheer") → **Nameservers** → wijzig in:
 
-| Domein | Type | Naam | Waarde |
-|---|---|---|---|
-| dealwijs.nl | A | @ | 76.76.21.21 |
-| dealwijs.com | A | @ | 76.76.21.21 |
+```
+ns1.vercel-dns.com
+ns2.vercel-dns.com
+```
+(derde veld leeg laten, opslaan)
 
-**Belangrijk: nameservers NIET omzetten naar Vercel** — dan stopt TransIP's gratis
-e-mailforwarding (#2). De A-records zijn genoeg; Vercel verifieert automatisch en
-mailt als het domein live is (paar minuten tot een uur).
+Daarna beheert Vercel alle DNS automatisch — site én mail-records staan al klaar,
+je hoeft daarna nooit meer iets met DNS te doen. Vercel mailt zodra de domeinen
+geverifieerd zijn (kan een paar minuten tot enkele uren duren).
 
-### 2. E-mailforwarding `privacy@dealwijs.nl` — 2 min
-TransIP-controlepaneel → Domeinen → `dealwijs.nl` → tabblad **E-mail** →
-**E-mailforwards** (heet soms "Doorsturen") → nieuwe forward: `privacy` → je eigen
-mailadres. (De privacypagina op de site verwijst naar dit adres.)
+### 2. ImprovMX-account voor `privacy@dealwijs.nl` — 2 min, gratis
+[improvmx.com](https://improvmx.com) → gratis account → *Add domain* `dealwijs.nl`
+→ alias `privacy` → doorsturen naar je eigen mailadres. De benodigde MX/SPF-records
+staan al in Vercel DNS klaar; het werkt zodra stap 1 doorgevoerd is.
 
 ### 3. AI Gateway-key — 3 min
 [vercel.com dashboard](https://vercel.com) → **AI Gateway** → API Keys → *Create key*.
