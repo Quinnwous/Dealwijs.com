@@ -63,13 +63,14 @@ grof. Elke week wordt de eerstvolgende maand-regel uitgewerkt naar weekregels.
 - [x] SEO-basics: robots, sitemap, metadata, JSON-LD (klaar vóór deploy)
 - [x] Validatie-kit + "Deal van de week"-draaiboek voorbereid ([groei/](groei/))
 - [x] Voorbeeldrapport-flow: demo zonder Altum-kosten (beschermt unit-economics)
-- [ ] `dealwijs.nl` registreren (+ `.com` indien vrij) — ~€10/jr, 5 min → [actielijst](actielijst-quinn.md)
+- [x] `dealwijs.nl` + `dealwijs.com` geregistreerd (TransIP)
 
-### Week 25 · 15–21 jun — Live
-- [ ] Vercel-account + deploy
-- [ ] Domein koppelen + Vercel Analytics aan (meet: bezoek → analyse → kopieer/deel)
+### Week 25 · 15–21 jun — Live *(grotendeels al in week 24 gedaan)*
+- [x] Vercel: project gelinkt, GitHub auto-deploy, site live op dealwijs.vercel.app
+- [x] Domeinen aan project gekoppeld; Analytics-code in de app
+- [ ] DNS-records bij TransIP + Analytics-schakelaar aan → [actielijst](actielijst-quinn.md)
 - [ ] `AI_GATEWAY_API_KEY` instellen → AI-verbouwschatting + samenvatting live
-- [ ] Altum-key roteren (stond in chat) vóór publieke launch
+- [x] ~~Altum-key roteren~~ — vervallen: Quinn akkoord met huidige key (10-6)
 - [ ] 3 testdeals zelf draaien + screenshots (contentvoorraad)
 
 ### Week 26 · 22–28 jun — Validatie starten

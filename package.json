@@ -11,6 +11,7 @@
     "e2e": "node --env-file=.env.local --import tsx scripts/analyse-run.ts"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "ai": "^6.0.199",
     "next": "^15.5.19",
     "react": "19.2.7",

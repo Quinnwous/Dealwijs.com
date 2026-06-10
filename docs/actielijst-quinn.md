@@ -1,45 +1,43 @@
-# Actielijst Quinn — dingen die alleen jij kunt regelen
+# Actielijst Quinn
 
-Bijgewerkt: 10 juni 2026, avond. Alles hieronder blokkeert een stap uit het
-[masterplan](masterplan.md); de rest doe ik. Volgorde = prioriteit.
+Bijgewerkt: 10 juni 2026, na deploy. De site is live op
+[dealwijs.vercel.app](https://dealwijs.vercel.app).
 
-## 1. `dealwijs.nl` + `dealwijs.com` registreren — ~5 min, ~€20/jr samen
-Bij een registrar naar keuze (TransIP, Versio, ...). Beide zijn per WHOIS bevestigd
-vrij (10-6). De .com dekt internationaal meteen af. ("Dealwise" was geen optie:
-dealwise.com/.nl/.eu zijn bezet en er bestaat al een YC-startup Dealwise in de
-M&A-hoek.) **Waarom eerst:** naam claimen vóór de eerste post; alles hierna hangt
-aan het domein.
-Stel meteen e-mailforwarding in: `privacy@dealwijs.nl` → je eigen mail (de
-privacypagina verwijst ernaar; bij de meeste registrars 2 min werk).
+## ✅ Afgerond
 
-## 2. Vercel: inloggen met de CLI — ~1 min ✅ account · ✅ CLI · ☐ login
-Account is er en de CLI is geïnstalleerd (projectlokaal). Enige wat rest: draai in
-de terminal `npx vercel login` (opent je browser, één klik bevestigen). Daarna doe
-ik de deploy, het domein-koppelen en Analytics.
+- ~~Domeinen registreren~~ — `dealwijs.nl` + `dealwijs.com` gekocht (TransIP)
+- ~~Vercel~~ — account, CLI-login, project gelinkt, GitHub gekoppeld (auto-deploy bij elke push), eerste deploy live
+- ~~GitHub-repo~~ — code staat op [Quinnwous/Dealwijs.com](https://github.com/Quinnwous/Dealwijs.com)
+- ~~Altum-key roteren~~ — Quinn akkoord met huidige key (besluit 10-6); key staat als env-var op Vercel
 
-## 3. AI Gateway API-key — ~5 min, pay-as-you-go (centen per analyse)
-In het Vercel-dashboard → AI Gateway → API key aanmaken → plak 'm in `.env.local`
-als `AI_GATEWAY_API_KEY=...`. **Waarom:** dan gaan de AI-verbouwschatting en de
-samenvatting live; nu is het rapport puur deterministisch.
+## ☐ Nog te doen
 
-## 4. Altum-key roteren — ~5 min
-Op [altum.ai](https://altum.ai) → dashboard → nieuwe API-key genereren, oude
-intrekken, nieuwe in `.env.local` zetten als `ALTUM_API_KEY=...`.
-**Waarom:** de huidige key heeft in een chatgesprek gestaan; vóór publieke launch
-vervangen.
+### 1. DNS-records instellen bij TransIP — 2 min
+TransIP-controlepaneel → Domeinen → klik het domein → **DNS**. Voeg per domein toe:
 
-## 5. GitHub-repo — ✅ KLAAR (code gepusht)
-Repo: https://github.com/Quinnwous/Dealwise — code staat erop (main).
-Optioneel, 30 sec: hernoem de repo naar `dealwijs` (Settings → Repository name)
-voor consistentie met het naamsbesluit; GitHub redirect de oude URL automatisch.
+| Domein | Type | Naam | Waarde |
+|---|---|---|---|
+| dealwijs.nl | A | @ | 76.76.21.21 |
+| dealwijs.com | A | @ | 76.76.21.21 |
 
-## 6. Marketingvriend inplannen — week van 22 juni
-Eerste "Deal van de week"-video staat gepland in week 26. Draaiboek ligt klaar:
+**Belangrijk: nameservers NIET omzetten naar Vercel** — dan stopt TransIP's gratis
+e-mailforwarding (#2). De A-records zijn genoeg; Vercel verifieert automatisch en
+mailt als het domein live is (paar minuten tot een uur).
+
+### 2. E-mailforwarding `privacy@dealwijs.nl` — 2 min
+TransIP-controlepaneel → Domeinen → `dealwijs.nl` → tabblad **E-mail** →
+**E-mailforwards** (heet soms "Doorsturen") → nieuwe forward: `privacy` → je eigen
+mailadres. (De privacypagina op de site verwijst naar dit adres.)
+
+### 3. AI Gateway-key — 3 min
+[vercel.com dashboard](https://vercel.com) → **AI Gateway** → API Keys → *Create key*.
+Plak hem in `.env.local` achter `AI_GATEWAY_API_KEY=` (placeholder staat klaar,
+niet in de chat plakken) en zeg het even — dan zet ik 'm ook als env-var op Vercel.
+
+### 4. Vercel Web Analytics aanzetten — 1 min
+Dashboard → project **dealwijs** → tabblad **Analytics** → *Enable*. De code zit
+al in de app; dit is alleen de schakelaar.
+
+### 5. Marketingvriend inplannen — week van 22 juni
+Eerste "Deal van de week"-video. Draaiboek ligt klaar:
 [groei/deal-van-de-week-draaiboek.md](groei/deal-van-de-week-draaiboek.md).
-Eén belletje deze week om de afspraak vast te zetten is genoeg.
-
----
-
-**Daarna kan ik door met:** deploy + domein + Analytics (na #1+#2), AI-laag live
-(na #3), testdeals + screenshots als contentvoorraad (na deploy), en de
-validatieronde uit week 26 voorbereiden ([groei/validatie-kit.md](groei/validatie-kit.md)).
