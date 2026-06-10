@@ -27,12 +27,26 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [report, setReport] = useState<DealReport | null>(null);
+  const [voorbeeld, setVoorbeeld] = useState(false);
+
+  async function toonVoorbeeld() {
+    setError(null);
+    try {
+      const res = await fetch("/api/voorbeeld");
+      if (!res.ok) throw new Error("Voorbeeld laden mislukte");
+      setReport((await res.json()) as DealReport);
+      setVoorbeeld(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Onbekende fout");
+    }
+  }
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
     setError(null);
     setReport(null);
+    setVoorbeeld(false);
     const fd = new FormData(e.currentTarget);
     const payload = Object.fromEntries(
       [...fd.entries()].filter(([, v]) => typeof v !== "string" || v.trim() !== ""),
@@ -180,9 +194,9 @@ export default function Home() {
           {loading ? (
             <AnalyseVoortgang />
           ) : report ? (
-            <Report report={report} />
+            <Report report={report} voorbeeld={voorbeeld} />
           ) : (
-            <Uitleg />
+            <Uitleg onVoorbeeld={toonVoorbeeld} />
           )}
         </div>
       </div>
@@ -252,7 +266,7 @@ function AnalyseVoortgang() {
   );
 }
 
-function Uitleg() {
+function Uitleg({ onVoorbeeld }: { onVoorbeeld: () => void }) {
   return (
     <div className="rounded-2xl border border-dashed border-line p-8 text-ink-soft">
       <p className="font-[family-name:var(--font-fraunces)] text-2xl text-ink">
@@ -276,14 +290,21 @@ function Uitleg() {
           krijg een geraamd verbouwbudget met kostenposten.
         </li>
       </ul>
-      <p className="mt-6 text-xs text-ink-faint">
+      <button
+        type="button"
+        onClick={onVoorbeeld}
+        className="mt-6 w-full rounded-lg border border-groen-diep/30 bg-white/70 py-2.5 text-sm font-semibold text-groen-diep transition hover:border-groen-diep"
+      >
+        Eerst zien hoe dat eruitziet? Bekijk een voorbeeldrapport →
+      </button>
+      <p className="mt-4 text-xs text-ink-faint">
         Marktwaarde en WOZ komen live uit officiële bronnen (Altum AI / Kadaster).
       </p>
     </div>
   );
 }
 
-function Report({ report }: { report: DealReport }) {
+function Report({ report, voorbeeld = false }: { report: DealReport; voorbeeld?: boolean }) {
   const { object, waarde, aankoopkosten, flip, verhuur, wws, score, ai } = report;
   const [gekopieerd, setGekopieerd] = useState(false);
 
@@ -308,6 +329,12 @@ function Report({ report }: { report: DealReport }) {
 
   return (
     <section className="akte rounded-2xl p-6 lg:p-8">
+      {voorbeeld && (
+        <p className="mb-5 rounded-lg border border-dashed border-line bg-white/60 px-4 py-2.5 text-xs text-ink-soft">
+          <strong className="text-ink">Voorbeeldrapport</strong> — echte woningdata (snapshot juni 2026),
+          vaste casus: aankoop €800.000, beoogde huur €3.000. Vul links een eigen adres in voor een verse analyse.
+        </p>
+      )}
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-xs uppercase tracking-[0.2em] text-ink-faint">Deal-rapport</p>
