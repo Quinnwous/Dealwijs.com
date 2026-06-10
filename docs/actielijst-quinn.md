@@ -3,12 +3,12 @@
 Bijgewerkt: 10 juni 2026, avond. Alles hieronder blokkeert een stap uit het
 [masterplan](masterplan.md); de rest doe ik. Volgorde = prioriteit.
 
-## 1. `dealwijs.nl` registreren — ~5 min, ~€10/jr
-Bij een registrar naar keuze (TransIP, Versio, ...). Neem ook mee als ze vrij zijn:
-`dealwijs.com` en `dealwise.com` (~€10/jr per stuk) — die laatste is de hedge voor
-internationaal: "Dealwijs" is de NL-spelling van "Dealwise", dus de wereldnaam ligt
-dan klaar zonder dat we nu rebranden. **Waarom eerst:** naam claimen vóór de eerste
-post; alles hierna hangt aan het domein.
+## 1. `dealwijs.nl` + `dealwijs.com` registreren — ~5 min, ~€20/jr samen
+Bij een registrar naar keuze (TransIP, Versio, ...). Beide zijn per WHOIS bevestigd
+vrij (10-6). De .com dekt internationaal meteen af. ("Dealwise" was geen optie:
+dealwise.com/.nl/.eu zijn bezet en er bestaat al een YC-startup Dealwise in de
+M&A-hoek.) **Waarom eerst:** naam claimen vóór de eerste post; alles hierna hangt
+aan het domein.
 Stel meteen e-mailforwarding in: `privacy@dealwijs.nl` → je eigen mail (de
 privacypagina verwijst ernaar; bij de meeste registrars 2 min werk).
 
