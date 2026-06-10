@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { DealReport } from "@/lib/analyse";
+import { SITE_URL } from "@/lib/site";
 
 const euro = (n: number) =>
   new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(n);
@@ -295,7 +296,7 @@ function Report({ report }: { report: DealReport }) {
     if (flip) r.push(`Flip: marge ${euro(flip.brutoMarge)} (${pct(flip.rendementOpInvestering)} ROI)`);
     if (verhuur) r.push(`Verhuur: nettorendement ${pct(verhuur.nettoRendement)}`);
     if (wws) r.push(`WWS-indicatie: ±${wws.indicatie.punten} punten (${wws.indicatie.segment})`);
-    r.push("— berekend met Dealwijs");
+    r.push(`— berekend met Dealwijs · ${SITE_URL.replace("https://", "")}`);
     try {
       await navigator.clipboard.writeText(r.join("\n"));
       setGekopieerd(true);
