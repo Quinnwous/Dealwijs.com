@@ -6,6 +6,7 @@ Details staan in de gelinkte documenten; hier wordt afgevinkt.
 - Concept & ontwerp: [product/concept-en-ontwerp.md](product/concept-en-ontwerp.md)
 - Data-feasibility (Fase 0): [product/data-feasibility-altum.md](product/data-feasibility-altum.md)
 - Go-to-market: [groei/go-to-market.md](groei/go-to-market.md)
+- **Acties voor Quinn (blokkeert de rest): [actielijst-quinn.md](actielijst-quinn.md)**
 
 ---
 
@@ -58,8 +59,10 @@ grof. Elke week wordt de eerstvolgende maand-regel uitgewerkt naar weekregels.
 - [x] MVP feature-complete (engine, WWS, AI-laag, UI, tests groen)
 - [x] Go-to-market-plan v1
 - [x] Map opgeruimd + masterplan opgesteld
-- [ ] `dealwijs.nl` registreren (+ `.com` indien vrij) — ~€10/jr, 5 min
-- [ ] Eerste git-commit (versiebeheer aan)
+- [x] Eerste git-commit (versiebeheer aan)
+- [x] SEO-basics: robots, sitemap, metadata, JSON-LD (klaar vóór deploy)
+- [x] Validatie-kit + "Deal van de week"-draaiboek voorbereid ([groei/](groei/))
+- [ ] `dealwijs.nl` registreren (+ `.com` indien vrij) — ~€10/jr, 5 min → [actielijst](actielijst-quinn.md)
 
 ### Week 25 · 15–21 jun — Live
 - [ ] Vercel-account + deploy
@@ -69,9 +72,9 @@ grof. Elke week wordt de eerstvolgende maand-regel uitgewerkt naar weekregels.
 - [ ] 3 testdeals zelf draaien + screenshots (contentvoorraad)
 
 ### Week 26 · 22–28 jun — Validatie starten
-- [ ] Validatie-DM naar 20 mensen (FB-groepen, r/DutchFIRE, Belegger.nl — script in [go-to-market](groei/go-to-market.md)) → doel: 10 testers
-- [ ] Eerste "Deal van de week"-video met marketingvriend
-- [ ] Per tester de 4 leervragen vastleggen (snapte 't / klopte 't / verraste WWS / zou betalen?)
+- [ ] Validatie-DM naar 20 mensen → doel: 10 testers (berichten + tracker klaar in [validatie-kit](groei/validatie-kit.md))
+- [ ] Eerste "Deal van de week"-video met marketingvriend ([draaiboek](groei/deal-van-de-week-draaiboek.md))
+- [ ] Per tester de 4 leervragen vastleggen in de [validatie-kit](groei/validatie-kit.md)
 
 ### Week 27 · 29 jun–5 jul — Leren & verbeteren
 - [ ] Feedback verwerken; één gerichte verbeterronde
