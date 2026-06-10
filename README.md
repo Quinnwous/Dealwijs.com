@@ -20,7 +20,10 @@ Go-to-market: [docs/groei/go-to-market.md](docs/groei/go-to-market.md)
 - **AI-laag** (`lib/ai/`, Claude via Vercel AI Gateway) — alléén voor fuzzy taken:
   verbouwkosten-raming uit een omschrijving + leesbare samenvatting met risico's.
   Zonder API-key blijft alles werken (rapport is dan puur deterministisch).
-- **Kostenbescherming**: per-IP rate limit (default 5 analyses/dag).
+- **Kostenbescherming**: per-IP rate limit (default 5 analyses/dag) + gratis
+  **voorbeeldrapport** (`/api/voorbeeld`, bevroren woningdata-snapshot — laat bezoekers
+  de waarde zien zonder Altum-kosten).
+- **Launch-klaar**: robots/sitemap/OG-metadata/JSON-LD en een privacypagina (`/privacy`).
 
 ## Starten
 
