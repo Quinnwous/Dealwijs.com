@@ -1,0 +1,110 @@
+@import "tailwindcss";
+
+/* ——— Dealwijs designtokens: "Hollands taxatierapport" ———
+   Papier + inkt + stempel. Warm gebroken wit, diep flessengroen,
+   signaalkleuren alleen voor het oordeel. */
+:root {
+  --paper: #f7f4ed;
+  --paper-deep: #efeae0;
+  --ink: #19261f;
+  --ink-soft: #46544c;
+  --ink-faint: #74807a;
+  --line: #d8d2c4;
+  --groen: #1d6b4f;
+  --groen-diep: #14503a;
+  --amber: #a16207;
+  --amber-bg: #fdf3df;
+  --rood: #b3362b;
+  --rood-bg: #faeae7;
+  --groen-bg: #e4f0e7;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-deep: var(--paper-deep);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-line: var(--line);
+  --color-groen: var(--groen);
+  --color-groen-diep: var(--groen-diep);
+  --font-display: var(--font-fraunces);
+  --font-sans: var(--font-archivo);
+  --font-mono: var(--font-jetbrains);
+}
+
+body {
+  background-color: var(--paper);
+  /* subtiele papierkorrel + lichtval linksboven */
+  background-image:
+    radial-gradient(ellipse 80% 60% at 15% 0%, rgba(29, 107, 79, 0.07), transparent 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  color: var(--ink);
+  font-family: var(--font-archivo), sans-serif;
+}
+
+/* Cijfers altijd tabulair uitlijnen */
+.cijfer {
+  font-family: var(--font-jetbrains), monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/* ——— Het oordeel als stempel ——— */
+.stempel {
+  display: inline-block;
+  transform: rotate(-5deg);
+  border: 3px solid currentColor;
+  border-radius: 0.375rem;
+  padding: 0.2em 0.55em;
+  font-family: var(--font-archivo), sans-serif;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  /* licht onregelmatige inktdruk */
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='80'%3E%3Cfilter id='r'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.35' numOctaves='3'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='linear' slope='1.6' intercept='-0.15'/%3E%3C/feComponentTransfer%3E%3CfeComposite operator='in' in2='SourceGraphic'/%3E%3C/filter%3E%3Crect width='200' height='80' fill='white' filter='url(%23r)'/%3E%3C/svg%3E");
+  mask-size: cover;
+  animation: stempel-klap 0.45s cubic-bezier(0.2, 1.6, 0.4, 1) both;
+}
+.stempel--go { color: var(--groen); background: var(--groen-bg); }
+.stempel--twijfel { color: var(--amber); background: var(--amber-bg); }
+.stempel--nogo { color: var(--rood); background: var(--rood-bg); }
+
+@keyframes stempel-klap {
+  0% { transform: rotate(-5deg) scale(2.4); opacity: 0; }
+  60% { transform: rotate(-5deg) scale(0.94); opacity: 1; }
+  100% { transform: rotate(-5deg) scale(1); }
+}
+
+/* ——— Gestaffelde page-load ——— */
+.rij-in {
+  animation: rij-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes rij-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ——— Rapport: aktepapier ——— */
+.akte {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.55)),
+    var(--paper);
+  border: 1px solid var(--line);
+  box-shadow:
+    0 1px 2px rgba(25, 38, 31, 0.05),
+    0 12px 32px -12px rgba(25, 38, 31, 0.18);
+}
+
+.akte-rule {
+  height: 1px;
+  background: linear-gradient(90deg, var(--line) 0%, var(--line) 60%, transparent 100%);
+}
+
+/* Voortgang tijdens analyse */
+.stap-puls { animation: stap-puls 1.2s ease-in-out infinite; }
+@keyframes stap-puls { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .stempel, .rij-in, .stap-puls { animation: none; }
+}
