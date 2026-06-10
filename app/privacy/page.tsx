@@ -45,8 +45,8 @@ export default function PrivacyPagina() {
         </ul>
         <p>
           Vragen of een verzoek (inzage, verwijdering)? Mail naar{" "}
-          <a href="mailto:privacy@dealwijs.nl" className="text-groen-diep underline-offset-2 hover:underline">
-            privacy@dealwijs.nl
+          <a href="mailto:privacy@dealwijs.com" className="text-groen-diep underline-offset-2 hover:underline">
+            privacy@dealwijs.com
           </a>
           .
         </p>
