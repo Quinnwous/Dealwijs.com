@@ -11,5 +11,8 @@ describe("voorbeeldRapport", () => {
     // gereguleerde max → gereguleerd scenario → NO-GO.
     expect(r.wws?.gereguleerdScenario).toBeTruthy();
     expect(r.score.oordeel).toBe("NO-GO");
+    // Financiering in de showcase: 80%-LTV-aanname + rente zichtbaar.
+    expect(r.verhuur?.schuld).toBe(640_000);
+    expect(r.verhuur?.renteJaarlast).toBe(35_200);
   });
 });

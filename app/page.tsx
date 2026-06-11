@@ -169,7 +169,7 @@ export default function Home() {
                 />
                 Met hypotheek financieren
               </label>
-              {metHypotheek && doel === "verhuur" && (
+              {metHypotheek && (
                 <div className="grid grid-cols-2 gap-3">
                   <Field
                     label="Hypotheekschuld (€)"
@@ -353,7 +353,8 @@ function Report({ report, voorbeeld = false }: { report: DealReport; voorbeeld?:
       {voorbeeld && (
         <p className="mb-5 rounded-lg border border-dashed border-line bg-white/60 px-4 py-2.5 text-xs text-ink-soft">
           <strong className="text-ink">Voorbeeldrapport</strong> — echte woningdata (snapshot juni 2026),
-          vaste casus: aankoop €800.000, beoogde huur €3.000. Vul links een eigen adres in voor een verse analyse.
+          vaste casus: aankoop €800.000, beoogde huur €3.000, 80% hypotheek. Vul links een eigen
+          adres in voor een verse analyse.
         </p>
       )}
       <div className="flex items-start justify-between gap-4">
@@ -409,7 +410,15 @@ function Report({ report, voorbeeld = false }: { report: DealReport; voorbeeld?:
       {flip && (
         <div className="mt-3 grid grid-cols-2 gap-3 text-sm lg:grid-cols-4">
           <Stat label="Verbouwkosten" value={euro(report.verbouwkosten)} sub={bronLabel(report.verbouwkostenBron)} />
-          <Stat label="Totale investering" value={euro(flip.totaleInvestering)} />
+          <Stat
+            label="Totale investering"
+            value={euro(flip.totaleInvestering)}
+            sub={
+              flip.financieringskosten > 0
+                ? `incl. ${euro(flip.financieringskosten)} rente tijdens project`
+                : undefined
+            }
+          />
           <Stat label="Bruto marge" value={euro(flip.brutoMarge)} highlight />
           <Stat label="Rendement" value={pct(flip.rendementOpInvestering)} highlight />
         </div>

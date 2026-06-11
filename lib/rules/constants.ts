@@ -55,6 +55,8 @@ export const HYPOTHEEK_DEFAULTS = {
   renteFractie: 0.055,
   /** Aanname-schuld als fractie van de aankoopprijs wanneer geen bedrag is opgegeven. */
   ltv: 0.8,
+  /** Aanname-projectduur van een flip (maanden) voor de rentekosten tijdens het project. */
+  flipProjectduurMaanden: 9,
 } as const;
 
 /** Standaard aankoopkosten-aannames (€) — grove NL-richtbedragen 2026. */

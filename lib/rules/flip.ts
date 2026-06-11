@@ -19,6 +19,8 @@ export interface FlipInput {
 export interface FlipResultaat {
   aankoopkostenKoper: number;
   verkoopkosten: number;
+  /** Rente-/financieringskosten tijdens het project, zoals meegerekend. */
+  financieringskosten: number;
   /** Aankoop + kosten koper + verbouwing + verkoopkosten + financiering. */
   totaleInvestering: number;
   /** ARV − totale investering. */
@@ -52,6 +54,7 @@ export function berekenFlip(input: FlipInput): FlipResultaat {
   return {
     aankoopkostenKoper: totaalKostenKoper,
     verkoopkosten,
+    financieringskosten,
     totaleInvestering,
     brutoMarge,
     rendementOpInvestering,

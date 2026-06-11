@@ -34,6 +34,26 @@ describe("analyseDeal (flip)", () => {
     expect(r.flip?.brutoMarge).toBe(48_750);
     expect(r.score.oordeel).toBe("GO");
   });
+
+  it("metHypotheek: rente over de projectduur drukt de flip-marge", async () => {
+    const r = await analyseDeal(
+      {
+        postcode: "1000AA",
+        housenumber: 1,
+        doel: "flip",
+        aankoopprijs: 300_000,
+        verbouwkosten: 40_000,
+        verwachteVerkoopwaarde: 420_000,
+        metHypotheek: true,
+      },
+      { getPropertyData: fakePD },
+    );
+    // schuld-aanname 80% = 240.000 × 5,5% × 9/12 = 9.900 financieringskosten
+    // kosten koper met hypotheek 29.350 + verkoopkosten 6.000 + verbouw 40.000
+    // → investering 385.250 → marge 34.750
+    expect(r.flip?.financieringskosten).toBe(9_900);
+    expect(r.flip?.brutoMarge).toBe(34_750);
+  });
 });
 
 describe("analyseDeal (verhuur)", () => {

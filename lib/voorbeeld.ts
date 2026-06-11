@@ -27,6 +27,8 @@ export const VOORBEELD_INPUT: DealInput = {
   doel: "verhuur",
   aankoopprijs: 800_000,
   maandhuur: 3_000,
+  // Gefinancierd (80%-LTV-aanname): laat ook de rente- en cash-on-cash-rij zien.
+  metHypotheek: true,
 };
 
 let cache: Promise<DealReport> | null = null;

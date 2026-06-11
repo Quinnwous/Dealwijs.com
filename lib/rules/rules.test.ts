@@ -88,6 +88,19 @@ describe("flip", () => {
     expect(r.totaleInvestering).toBe(326_750);
     expect(r.brutoMarge).toBe(53_250);
     expect(r.rendementOpInvestering).toBeCloseTo(0.163, 3);
+    expect(r.financieringskosten).toBe(0);
+  });
+
+  it("telt financieringskosten mee in investering en marge", () => {
+    const r = berekenFlip({
+      aankoopprijs: 250_000,
+      verbouwkosten: 50_000,
+      verwachteVerkoopwaarde: 380_000,
+      financieringskosten: 9_900,
+    });
+    expect(r.financieringskosten).toBe(9_900);
+    expect(r.totaleInvestering).toBe(336_650); // 326.750 + 9.900
+    expect(r.brutoMarge).toBe(43_350);
   });
 });
 

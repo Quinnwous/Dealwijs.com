@@ -99,12 +99,21 @@ export async function analyseDeal(
 
   if (input.doel === "flip") {
     const arv = input.verwachteVerkoopwaarde ?? pd.marktwaarde;
+    // Financiering: rente over de schuld gedurende de aangenomen projectduur.
+    const schuld =
+      input.schuld ?? (metHypotheek ? Math.round(input.aankoopprijs * HYPOTHEEK_DEFAULTS.ltv) : 0);
+    const renteFractie =
+      input.hypotheekRente != null ? input.hypotheekRente / 100 : HYPOTHEEK_DEFAULTS.renteFractie;
+    const financieringskosten = schuld
+      ? Math.round(schuld * renteFractie * (HYPOTHEEK_DEFAULTS.flipProjectduurMaanden / 12))
+      : 0;
     flip = berekenFlip({
       aankoopprijs: input.aankoopprijs,
       verbouwkosten,
       verwachteVerkoopwaarde: arv,
       gebruik,
       metHypotheek,
+      financieringskosten,
     });
     ({ oordeel, kernsignaal } = scoreFlip(flip.brutoMarge, flip.rendementOpInvestering));
   } else {
