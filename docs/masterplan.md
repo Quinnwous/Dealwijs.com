@@ -65,6 +65,9 @@ grof. Elke week wordt de eerstvolgende maand-regel uitgewerkt naar weekregels.
 - [x] Validatie-kit + "Deal van de week"-draaiboek voorbereid ([groei/](groei/))
 - [x] Voorbeeldrapport-flow: demo zonder Altum-kosten (beschermt unit-economics)
 - [x] `dealwijs.nl` + `dealwijs.com` geregistreerd (TransIP)
+- [x] Verbeterronde engine (11-6): alle 2026-parameters geverifieerd tegen
+      Belastingdienst/Rijksoverheid; leegwaarderatio (box 3 verhuurd) en
+      startersvrijstelling-waardegrens (€555k) toegevoegd. Tests 24 → 33.
 
 ### Week 25 · 15–21 jun — Live *(grotendeels al in week 24 gedaan)*
 - [x] Vercel: project gelinkt, GitHub auto-deploy, site live op dealwijs.vercel.app
