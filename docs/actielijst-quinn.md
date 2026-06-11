@@ -1,25 +1,22 @@
 # Actielijst Quinn
 
-Bijgewerkt: 10 juni 2026 (laat op de avond). De site is live op
-[dealwijs.com](https://dealwijs.com). De AI Gateway-key staat nu op Vercel
+Bijgewerkt: 11 juni 2026. De site is live op **beide domeinen**:
+[dealwijs.com](https://dealwijs.com) én [dealwijs.nl](https://dealwijs.nl)
+(nameservers doorgekomen, gecheckt 11-6 ✅). De AI Gateway-key staat op Vercel
 (Production + Preview) en productie is herdeployd — **AI werkt live** ✅.
 Afgeronde punten zijn verwijderd — wat hieronder staat is alles wat nog
 open is.
 
 ## ☐ Nog te doen
 
-### 1. Nameservers van `dealwijs.nl` alsnog omzetten — 2 min
-`dealwijs.com` staat goed (✅ live), maar **dealwijs.nl wijst nog naar
-TransIP** (nogmaals gecheckt 10-6 23:45 — de wijziging is daar nog steeds
-niet doorgekomen). Check in het TransIP-controlepaneel: Domeinen →
-**dealwijs.nl** → kopje **Domeinbeheer** → **TransIP-instellingen UIT**
-(er verschijnt "Geavanceerd domeinbeheer") → **Nameservers** → wijzig in:
-
-```
-ns1.vercel-dns.com
-ns2.vercel-dns.com
-```
-(derde veld leeg laten, opslaan)
+### 1. `www.dealwijs.com` koppelen in Vercel — 1 min
+`www.dealwijs.nl` redirect netjes naar het hoofddomein, maar
+**www.dealwijs.com geeft een SSL-fout** (certificaat dekt het subdomein
+niet — het is nooit als domein aan het Vercel-project toegevoegd). Fix:
+zeg "voeg www.dealwijs.com toe aan het Vercel-project" tegen Claude
+(en geef de domeinwijziging toestemming), of doe het zelf: Vercel-dashboard →
+project **dealwijs** → Settings → Domains → add `www.dealwijs.com` →
+kies "Redirect to dealwijs.com".
 
 ### 2. ImprovMX-check — 1 min
 De MX-records van dealwijs.com wijzen correct naar ImprovMX ✅ (gecheckt

@@ -30,11 +30,12 @@ vastgoed-deal-analyse die Amerikaanse tools en kale ChatGPT niet kunnen).
 gratis-limiet beschermen de marge; abonnement moet ruim boven datakosten per
 gebruiker blijven.
 
-## 2. Waar we staan (10 juni 2026)
+## 2. Waar we staan (11 juni 2026)
 
 - ✅ Fase 0 — datapad gevalideerd (Altum AVM + WOZ, GO)
 - ✅ Fase 1 — MVP feature-complete: reken-engine 2026, WWS-moat, AI-laag, rapport-UI, rate limit. 23/23 tests groen.
-- ⏳ Nog niet: live deployment, domein, AI-key, eerste vreemde gebruikers, omzet.
+- ✅ Live op [dealwijs.com](https://dealwijs.com) én [dealwijs.nl](https://dealwijs.nl); AI-key actief (Prod + Preview).
+- ⏳ Nog niet: eerste vreemde gebruikers, omzet. Klein restpunt: www.dealwijs.com → [actielijst](actielijst-quinn.md).
 
 ## 3. Mijlpalenpad naar €50k
 
@@ -68,8 +69,8 @@ grof. Elke week wordt de eerstvolgende maand-regel uitgewerkt naar weekregels.
 ### Week 25 · 15–21 jun — Live *(grotendeels al in week 24 gedaan)*
 - [x] Vercel: project gelinkt, GitHub auto-deploy, site live op dealwijs.vercel.app
 - [x] Domeinen aan project gekoppeld; Analytics-code in de app
-- [ ] DNS-records bij TransIP + Analytics-schakelaar aan → [actielijst](actielijst-quinn.md)
-- [ ] `AI_GATEWAY_API_KEY` instellen → AI-verbouwschatting + samenvatting live
+- [x] DNS-records: nameservers van beide domeinen naar Vercel, .nl doorgekomen 11-6
+- [x] `AI_GATEWAY_API_KEY` ingesteld (Prod + Preview, 10-6) → AI-verbouwschatting + samenvatting live
 - [x] ~~Altum-key roteren~~ — vervallen: Quinn akkoord met huidige key (10-6)
 - [ ] 3 testdeals zelf draaien + screenshots (contentvoorraad)
 
