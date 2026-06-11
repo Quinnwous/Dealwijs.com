@@ -400,7 +400,15 @@ function Report({ report, voorbeeld = false }: { report: DealReport; voorbeeld?:
       {verhuur && (
         <div className="mt-3 grid grid-cols-2 gap-3 text-sm lg:grid-cols-4">
           <Stat label="Jaarhuur" value={euro(verhuur.jaarhuur)} />
-          <Stat label="Box 3 / jaar" value={euro(verhuur.box3Jaarlast)} />
+          <Stat
+            label="Box 3 / jaar"
+            value={euro(verhuur.box3Jaarlast)}
+            sub={
+              verhuur.leegwaarderatio < 1
+                ? `leegwaarderatio ${Math.round(verhuur.leegwaarderatio * 100)}% toegepast`
+                : undefined
+            }
+          />
           <Stat label="Netto cashflow / jaar" value={euro(verhuur.nettoJaarcashflowVoorFinanciering)} highlight />
           <Stat label="Nettorendement" value={pct(verhuur.nettoRendement)} highlight />
         </div>

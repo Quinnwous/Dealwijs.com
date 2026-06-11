@@ -1,5 +1,5 @@
 import { berekenAankoopkosten } from "./kosten";
-import { berekenBox3Jaarlast } from "./box3";
+import { berekenBox3Jaarlast, leegwaarderatio } from "./box3";
 import { type Gebruik } from "./overdrachtsbelasting";
 import { round2, round4 } from "./util";
 
@@ -23,6 +23,8 @@ export interface VerhuurResultaat {
   /** Jaarhuur / totale investering. */
   brutoAanvangsrendement: number;
   box3Jaarlast: number;
+  /** Toegepaste leegwaarderatio op de WOZ-waarde in box 3 (1 = geen korting). */
+  leegwaarderatio: number;
   /** Jaarhuur − exploitatie − box 3 (vóór financieringslasten). */
   nettoJaarcashflowVoorFinanciering: number;
   /** Netto cashflow / totale investering. */
@@ -46,7 +48,7 @@ export function berekenVerhuur(input: VerhuurInput): VerhuurResultaat {
   const totaleInvestering = round2(aankoopprijs + totaalKostenKoper + verbouwkosten);
   const brutoAanvangsrendement =
     totaleInvestering > 0 ? round4(jaarhuur / totaleInvestering) : 0;
-  const box3Jaarlast = berekenBox3Jaarlast({ wozWaarde, schuld });
+  const box3Jaarlast = berekenBox3Jaarlast({ wozWaarde, schuld, jaarhuur });
   const exploitatie = round2(jaarhuur * exploitatiekostenFractie);
   const nettoJaarcashflowVoorFinanciering = round2(jaarhuur - exploitatie - box3Jaarlast);
   const nettoRendement =
@@ -57,6 +59,7 @@ export function berekenVerhuur(input: VerhuurInput): VerhuurResultaat {
     totaleInvestering,
     brutoAanvangsrendement,
     box3Jaarlast,
+    leegwaarderatio: leegwaarderatio(jaarhuur, wozWaarde),
     nettoJaarcashflowVoorFinanciering,
     nettoRendement,
   };

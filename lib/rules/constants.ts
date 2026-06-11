@@ -7,11 +7,31 @@ export const OVERDRACHTSBELASTING = {
   belegger: 0.08,
   /** Eigen hoofdverblijf. */
   hoofdverblijf: 0.02,
-  /** Starters onder voorwaarden. */
+  /** Starters onder voorwaarden (zie ook de woningwaardegrens hieronder). */
   starter: 0,
   /** Bedrijfspand / niet-woning. */
   bedrijf: 0.104,
 } as const;
+
+/**
+ * Startersvrijstelling geldt t/m deze woningwaarde (per 1-1-2026; wordt €615.000 per 2027).
+ * Daarboven betaalt de starter het hoofdverblijf-tarief.
+ */
+export const STARTERSVRIJSTELLING_MAX_WONINGWAARDE = 555_000;
+
+/**
+ * Leegwaarderatio (box 3, verhuurde woning met huurbescherming) — tabel 2023 t/m 2026.
+ * Schijven op jaarhuur als percentage van de WOZ-waarde; bovengrens is inclusief.
+ * Geldt niet bij tijdelijke verhuur of niet-marktconforme verhuur aan gelieerde partij (dan 100%).
+ * Let op: per 1-1-2027 wordt de leegwaarderatio afgeschaft.
+ */
+export const LEEGWAARDERATIO_2026 = [
+  { totEnMetFractie: 0.01, ratio: 0.73 },
+  { totEnMetFractie: 0.02, ratio: 0.79 },
+  { totEnMetFractie: 0.03, ratio: 0.84 },
+  { totEnMetFractie: 0.04, ratio: 0.9 },
+  { totEnMetFractie: 0.05, ratio: 0.95 },
+] as const;
 
 /** Box 3 — peildatum 2026. */
 export const BOX3 = {

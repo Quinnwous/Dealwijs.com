@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { berekenOverdrachtsbelasting } from "./overdrachtsbelasting";
-import { berekenBox3Jaarlast } from "./box3";
+import { berekenBox3Jaarlast, leegwaarderatio } from "./box3";
 import { berekenAankoopkosten } from "./kosten";
 import { berekenFlip } from "./flip";
 import { berekenVerhuur } from "./rendement";
@@ -16,6 +16,35 @@ describe("overdrachtsbelasting 2026", () => {
   it("bedrijfspand = 10,4%", () => {
     expect(berekenOverdrachtsbelasting(400_000, "bedrijf")).toBe(41_600);
   });
+  it("starter onder de woningwaardegrens = vrijgesteld", () => {
+    expect(berekenOverdrachtsbelasting(400_000, "starter")).toBe(0);
+  });
+  it("starter precies op de grens (€555.000) = nog vrijgesteld", () => {
+    expect(berekenOverdrachtsbelasting(555_000, "starter")).toBe(0);
+  });
+  it("starter boven de grens vervalt naar hoofdverblijf-tarief 2%", () => {
+    expect(berekenOverdrachtsbelasting(600_000, "starter")).toBe(12_000);
+  });
+});
+
+describe("leegwaarderatio 2026 (verhuurde woning, box 3)", () => {
+  it("jaarhuur t/m 1% van WOZ → 73%", () => {
+    expect(leegwaarderatio(9_000, 1_000_000)).toBe(0.73);
+    expect(leegwaarderatio(10_000, 1_000_000)).toBe(0.73); // precies 1% valt nog in de laagste schijf
+  });
+  it("1–2% → 79%, 2–3% → 84%, 3–4% → 90%, 4–5% → 95%", () => {
+    expect(leegwaarderatio(15_000, 1_000_000)).toBe(0.79);
+    expect(leegwaarderatio(30_000, 1_000_000)).toBe(0.84);
+    expect(leegwaarderatio(35_000, 1_000_000)).toBe(0.9);
+    expect(leegwaarderatio(45_000, 1_000_000)).toBe(0.95);
+  });
+  it("boven 5% → geen korting (100%)", () => {
+    expect(leegwaarderatio(60_000, 1_000_000)).toBe(1);
+  });
+  it("geen huur of geen WOZ → geen korting (100%)", () => {
+    expect(leegwaarderatio(0, 300_000)).toBe(1);
+    expect(leegwaarderatio(12_000, 0)).toBe(1);
+  });
 });
 
 describe("box 3 2026", () => {
@@ -26,6 +55,11 @@ describe("box 3 2026", () => {
   it("met schuld: forfait bezitting − forfait schuld, × 36%", () => {
     // (300.000×6% − 200.000×2,7%) = 18.000 − 5.400 = 12.600 → × 36% = 4.536
     expect(berekenBox3Jaarlast({ wozWaarde: 300_000, schuld: 200_000 })).toBe(4_536);
+  });
+  it("verhuurde staat: leegwaarderatio verlaagt de grondslagwaarde", () => {
+    // jaarhuur 3.300 / WOZ 300.000 = 1,1% → ratio 79%
+    // 300.000 × 0,79 = 237.000 → × 6% = 14.220 → × 36% = 5.119,20
+    expect(berekenBox3Jaarlast({ wozWaarde: 300_000, jaarhuur: 3_300 })).toBe(5_119.2);
   });
 });
 
@@ -66,9 +100,22 @@ describe("verhuur", () => {
     expect(r.totaleInvestering).toBe(325_250);
     expect(r.jaarhuur).toBe(18_000);
     expect(r.box3Jaarlast).toBe(6_480);
+    expect(r.leegwaarderatio).toBe(1); // 18.000/300.000 = 6% → geen korting
     expect(r.nettoJaarcashflowVoorFinanciering).toBe(7_020);
     expect(r.brutoAanvangsrendement).toBeCloseTo(0.0553, 4);
     expect(r.nettoRendement).toBeCloseTo(0.0216, 4);
+  });
+
+  it("lage huur t.o.v. WOZ: leegwaarderatio drukt de box 3-last", () => {
+    // Gereguleerde-huur-casus: WOZ 1.321.000, huur €1.228/mnd → jaarhuur 14.736
+    // verhouding 1,12% → ratio 79% → box 3 over 1.043.590 = 22.541,54
+    const r = berekenVerhuur({
+      aankoopprijs: 800_000,
+      maandhuur: 1_228,
+      wozWaarde: 1_321_000,
+    });
+    expect(r.leegwaarderatio).toBe(0.79);
+    expect(r.box3Jaarlast).toBe(22_541.54);
   });
 });
 
