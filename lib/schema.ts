@@ -24,6 +24,8 @@ export const dealInputSchema = z.object({
   maandhuur: optioneelGetal(z.coerce.number().positive()),
   metHypotheek: z.coerce.boolean().optional(),
   schuld: optioneelGetal(z.coerce.number().nonnegative()),
+  /** Jaarrente in procenten (bv. 5,5). Default = verhuurhypotheek-aanname. */
+  hypotheekRente: optioneelGetal(z.coerce.number().positive().max(15)),
 });
 
 export type DealInput = z.infer<typeof dealInputSchema>;

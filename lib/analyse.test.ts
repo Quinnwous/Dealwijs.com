@@ -60,6 +60,17 @@ describe("analyseDeal (verhuur)", () => {
     expect(r.wws!.gereguleerdScenario!.jaarhuur).toBeLessThan(r.verhuur!.jaarhuur);
     expect(r.score.kernsignaal).toContain("wettelijk begrensd");
   });
+
+  it("metHypotheek zonder schuldbedrag: 80% LTV-aanname en default-rente in het rapport", async () => {
+    const r = await analyseDeal(
+      { postcode: "1000AA", housenumber: 1, doel: "verhuur", aankoopprijs: 300_000, verbouwkosten: 0, maandhuur: 1_500, metHypotheek: true },
+      { getPropertyData: fakePD },
+    );
+    expect(r.verhuur!.schuld).toBe(240_000); // aanname: 80% van de aankoopprijs
+    expect(r.verhuur!.renteJaarlast).toBe(13_200); // default verhuurhypotheekrente 5,5%
+    // WOZ 350.000 → box3 (21.000 − 6.480)×36% = 5.227,20; vóór fin. 8.272,80 → ná rente −4.927,20
+    expect(r.verhuur!.nettoJaarcashflowNaFinanciering).toBe(-4_927.2);
+  });
 });
 
 describe("analyseDeal (AI-laag)", () => {

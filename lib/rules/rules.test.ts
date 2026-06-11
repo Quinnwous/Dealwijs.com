@@ -117,6 +117,44 @@ describe("verhuur", () => {
     expect(r.leegwaarderatio).toBe(0.79);
     expect(r.box3Jaarlast).toBe(22_541.54);
   });
+
+  it("met financiering: rente, cashflow ná rente en rendement op eigen geld", () => {
+    // metHypotheek: kosten koper 29.350 (incl. notaris hyp., advies, taxatie) → investering 329.350
+    // box3 met schuld: (300.000×6% − 240.000×2,7%) × 36% = 4.147,20
+    // vóór financiering: 18.000 − 4.500 − 4.147,20 = 9.352,80
+    // rente 4,5% × 240.000 = 10.800 → ná financiering −1.447,20
+    // eigen inbreng: 329.350 − 240.000 = 89.350 → rendement eigen geld −1,62%
+    const r = berekenVerhuur({
+      aankoopprijs: 300_000,
+      maandhuur: 1_500,
+      metHypotheek: true,
+      schuld: 240_000,
+      hypotheekRenteFractie: 0.045,
+    });
+    expect(r.renteJaarlast).toBe(10_800);
+    expect(r.nettoJaarcashflowVoorFinanciering).toBe(9_352.8);
+    expect(r.nettoJaarcashflowNaFinanciering).toBe(-1_447.2);
+    expect(r.eigenInbreng).toBe(89_350);
+    expect(r.rendementOpEigenVermogen).toBeCloseTo(-0.0162, 4);
+  });
+
+  it("schuld zonder opgegeven rente: default verhuurhypotheekrente 5,5%", () => {
+    const r = berekenVerhuur({
+      aankoopprijs: 300_000,
+      maandhuur: 1_500,
+      metHypotheek: true,
+      schuld: 240_000,
+    });
+    expect(r.renteJaarlast).toBe(13_200); // 240.000 × 5,5%
+  });
+
+  it("zonder schuld: geen rente, rendement eigen geld == nettorendement", () => {
+    const r = berekenVerhuur({ aankoopprijs: 300_000, maandhuur: 1_500 });
+    expect(r.renteJaarlast).toBe(0);
+    expect(r.nettoJaarcashflowNaFinanciering).toBe(r.nettoJaarcashflowVoorFinanciering);
+    expect(r.eigenInbreng).toBe(r.totaleInvestering);
+    expect(r.rendementOpEigenVermogen).toBe(r.nettoRendement);
+  });
 });
 
 describe("wws (Wet betaalbare huur, indicatie)", () => {

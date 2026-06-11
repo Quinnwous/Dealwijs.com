@@ -11,6 +11,7 @@ import {
   berekenFlip,
   berekenVerhuur,
   schatWwsPunten,
+  HYPOTHEEK_DEFAULTS,
   type AankoopkostenResultaat,
   type FlipResultaat,
   type VerhuurResultaat,
@@ -108,6 +109,9 @@ export async function analyseDeal(
     ({ oordeel, kernsignaal } = scoreFlip(flip.brutoMarge, flip.rendementOpInvestering));
   } else {
     const maandhuur = input.maandhuur ?? schatHuur(pd);
+    // Financiering: opgegeven schuld wint; met hypotheek zonder bedrag → 80%-LTV-aanname.
+    const schuld =
+      input.schuld ?? (metHypotheek ? Math.round(input.aankoopprijs * HYPOTHEEK_DEFAULTS.ltv) : 0);
     const verhuurInput = {
       aankoopprijs: input.aankoopprijs,
       maandhuur,
@@ -115,7 +119,8 @@ export async function analyseDeal(
       verbouwkosten,
       gebruik,
       metHypotheek,
-      schuld: input.schuld ?? 0,
+      schuld,
+      hypotheekRenteFractie: input.hypotheekRente != null ? input.hypotheekRente / 100 : undefined,
     };
     verhuur = berekenVerhuur(verhuurInput);
 

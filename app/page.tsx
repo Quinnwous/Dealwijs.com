@@ -170,7 +170,20 @@ export default function Home() {
                 Met hypotheek financieren
               </label>
               {metHypotheek && doel === "verhuur" && (
-                <Field label="Hypotheekschuld op het pand (€)" name="schuld" type="number" placeholder="200.000" />
+                <div className="grid grid-cols-2 gap-3">
+                  <Field
+                    label="Hypotheekschuld (€)"
+                    name="schuld"
+                    type="number"
+                    placeholder="leeg = 80% LTV"
+                  />
+                  <Field
+                    label="Rente (% per jaar)"
+                    name="hypotheekRente"
+                    type="number"
+                    placeholder="leeg = 5,5%"
+                  />
+                </div>
               )}
             </div>
 
@@ -318,7 +331,12 @@ function Report({ report, voorbeeld = false }: { report: DealReport; voorbeeld?:
       `Aankoopprijs ${euro(report.aankoopprijs)} · marktwaarde ${euro(waarde.marktwaarde)} · kosten koper ${euro(aankoopkosten.totaalKostenKoper)}`,
     ];
     if (flip) r.push(`Flip: marge ${euro(flip.brutoMarge)} (${pct(flip.rendementOpInvestering)} ROI)`);
-    if (verhuur) r.push(`Verhuur: nettorendement ${pct(verhuur.nettoRendement)}`);
+    if (verhuur) {
+      r.push(
+        `Verhuur: nettorendement ${pct(verhuur.nettoRendement)}` +
+          (verhuur.schuld > 0 ? ` · ${pct(verhuur.rendementOpEigenVermogen)} op eigen geld` : ""),
+      );
+    }
     if (wws) r.push(`WWS-indicatie: ±${wws.indicatie.punten} punten (${wws.indicatie.segment})`);
     r.push(`— berekend met Dealwijs · ${SITE_URL.replace("https://", "")}`);
     try {
@@ -411,6 +429,24 @@ function Report({ report, voorbeeld = false }: { report: DealReport; voorbeeld?:
           />
           <Stat label="Netto cashflow / jaar" value={euro(verhuur.nettoJaarcashflowVoorFinanciering)} highlight />
           <Stat label="Nettorendement" value={pct(verhuur.nettoRendement)} highlight />
+        </div>
+      )}
+
+      {verhuur && verhuur.schuld > 0 && (
+        <div className="mt-3 grid grid-cols-2 gap-3 text-sm lg:grid-cols-4">
+          <Stat
+            label="Rente / jaar"
+            value={euro(verhuur.renteJaarlast)}
+            sub={`${pct(verhuur.renteJaarlast / verhuur.schuld)} over ${euro(verhuur.schuld)}`}
+          />
+          <Stat label="Eigen inbreng" value={euro(verhuur.eigenInbreng)} />
+          <Stat label="Cashflow ná rente" value={euro(verhuur.nettoJaarcashflowNaFinanciering)} highlight />
+          <Stat
+            label="Rendement eigen geld"
+            value={pct(verhuur.rendementOpEigenVermogen)}
+            sub="cash-on-cash"
+            highlight
+          />
         </div>
       )}
 

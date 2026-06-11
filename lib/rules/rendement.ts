@@ -1,5 +1,6 @@
 import { berekenAankoopkosten } from "./kosten";
 import { berekenBox3Jaarlast, leegwaarderatio } from "./box3";
+import { HYPOTHEEK_DEFAULTS } from "./constants";
 import { type Gebruik } from "./overdrachtsbelasting";
 import { round2, round4 } from "./util";
 
@@ -11,8 +12,10 @@ export interface VerhuurInput {
   verbouwkosten?: number;
   gebruik?: Gebruik;
   metHypotheek?: boolean;
-  /** Hypotheekschuld op het pand (voor box 3). */
+  /** Hypotheekschuld op het pand (voor box 3 én rentelast). */
   schuld?: number;
+  /** Jaarrente over de schuld, aflossingsvrij gerekend; default verhuurhypotheek-aanname. */
+  hypotheekRenteFractie?: number;
   /** Jaarlijkse exploitatiekosten als fractie van de jaarhuur (onderhoud, beheer, verzekering, leegstand). */
   exploitatiekostenFractie?: number;
 }
@@ -29,6 +32,16 @@ export interface VerhuurResultaat {
   nettoJaarcashflowVoorFinanciering: number;
   /** Netto cashflow / totale investering. */
   nettoRendement: number;
+  /** Schuld waarmee gerekend is (0 = geen financiering). */
+  schuld: number;
+  /** Jaarlijkse rentelast over de schuld (aflossingsvrij gerekend). */
+  renteJaarlast: number;
+  /** Cashflow ná rentelasten. */
+  nettoJaarcashflowNaFinanciering: number;
+  /** Eigen geld in de deal: totale investering − schuld. */
+  eigenInbreng: number;
+  /** Cash-on-cash: cashflow ná financiering / eigen inbreng. */
+  rendementOpEigenVermogen: number;
 }
 
 export function berekenVerhuur(input: VerhuurInput): VerhuurResultaat {
@@ -40,6 +53,7 @@ export function berekenVerhuur(input: VerhuurInput): VerhuurResultaat {
     gebruik = "belegger",
     metHypotheek = false,
     schuld = 0,
+    hypotheekRenteFractie = HYPOTHEEK_DEFAULTS.renteFractie,
     exploitatiekostenFractie = 0.25,
   } = input;
 
@@ -54,6 +68,12 @@ export function berekenVerhuur(input: VerhuurInput): VerhuurResultaat {
   const nettoRendement =
     totaleInvestering > 0 ? round4(nettoJaarcashflowVoorFinanciering / totaleInvestering) : 0;
 
+  const renteJaarlast = round2(schuld * hypotheekRenteFractie);
+  const nettoJaarcashflowNaFinanciering = round2(nettoJaarcashflowVoorFinanciering - renteJaarlast);
+  const eigenInbreng = round2(Math.max(0, totaleInvestering - schuld));
+  const rendementOpEigenVermogen =
+    eigenInbreng > 0 ? round4(nettoJaarcashflowNaFinanciering / eigenInbreng) : 0;
+
   return {
     jaarhuur,
     totaleInvestering,
@@ -62,5 +82,10 @@ export function berekenVerhuur(input: VerhuurInput): VerhuurResultaat {
     leegwaarderatio: leegwaarderatio(jaarhuur, wozWaarde),
     nettoJaarcashflowVoorFinanciering,
     nettoRendement,
+    schuld,
+    renteJaarlast,
+    nettoJaarcashflowNaFinanciering,
+    eigenInbreng,
+    rendementOpEigenVermogen,
   };
 }

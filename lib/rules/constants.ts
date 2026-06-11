@@ -45,6 +45,18 @@ export const BOX3 = {
   heffingvrijPerPersoon: 59357,
 } as const;
 
+/**
+ * Financierings-aannames verhuurhypotheek — marktbeeld medio 2026
+ * (verhuurhypotheekrente vanaf ~5,4%; financiering tot 75-85% marktwaarde verhuurde staat).
+ * Beide overschrijfbaar door de gebruiker.
+ */
+export const HYPOTHEEK_DEFAULTS = {
+  /** Jaarrente verhuurhypotheek (aflossingsvrij gerekend: rente = cashflowlast). */
+  renteFractie: 0.055,
+  /** Aanname-schuld als fractie van de aankoopprijs wanneer geen bedrag is opgegeven. */
+  ltv: 0.8,
+} as const;
+
 /** Standaard aankoopkosten-aannames (€) — grove NL-richtbedragen 2026. */
 export const AANKOOPKOSTEN_DEFAULTS = {
   notarisLevering: 800,
