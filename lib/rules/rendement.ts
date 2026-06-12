@@ -1,6 +1,6 @@
 import { berekenAankoopkosten } from "./kosten";
 import { berekenBox3Jaarlast, leegwaarderatio } from "./box3";
-import { HYPOTHEEK_DEFAULTS } from "./constants";
+import { HYPOTHEEK_DEFAULTS, VERHUUR_DEFAULTS } from "./constants";
 import { type Gebruik } from "./overdrachtsbelasting";
 import { round2, round4 } from "./util";
 
@@ -54,7 +54,7 @@ export function berekenVerhuur(input: VerhuurInput): VerhuurResultaat {
     metHypotheek = false,
     schuld = 0,
     hypotheekRenteFractie = HYPOTHEEK_DEFAULTS.renteFractie,
-    exploitatiekostenFractie = 0.25,
+    exploitatiekostenFractie = VERHUUR_DEFAULTS.exploitatiekostenFractie,
   } = input;
 
   const { totaalKostenKoper } = berekenAankoopkosten({ aankoopprijs, gebruik, metHypotheek });

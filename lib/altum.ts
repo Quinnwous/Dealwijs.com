@@ -1,6 +1,8 @@
 // Server-side client voor Altum AI (woningdata). Houdt key server-side, throttelt en cachet.
 // Endpoints + velden bevestigd in Fase 0 (zie docs/product/data-feasibility-altum.md).
 
+import { AdresNietGevondenError } from "./fouten";
+
 const BASE = "https://api.altum.ai";
 const MIN_GAP_MS = 1500; // gratis tier rate limit → pauze tussen calls
 
@@ -35,6 +37,7 @@ async function post<T = Record<string, unknown>>(
         await sleep(3000 * attempt);
         continue;
       }
+      if (res.status === 404) throw new AdresNietGevondenError();
       if (!res.ok) throw new Error(`Altum ${endpoint} gaf status ${res.status}`);
       return (await res.json()) as T;
     }
@@ -94,7 +97,11 @@ export async function getPropertyData(
     ...(houseaddition ? { houseaddition } : {}),
   };
   const avm = await post<{ Output?: AvmOutput }>("avm", body);
-  const woz = await post<{ Output?: { wozvalue?: WozEntry[] } }>("woz", body);
+  // WOZ-fout is geen showstopper (bv. nieuwbouw zonder beschikking): rapport
+  // valt dan terug op de aankoopprijs als box 3-grondslag (zie analyse).
+  const woz = await post<{ Output?: { wozvalue?: WozEntry[] } }>("woz", body).catch(
+    () => ({ Output: undefined }),
+  );
   const a = avm.Output ?? {};
   const w = woz.Output ?? {};
   return {

@@ -104,6 +104,12 @@ export const WWS_2026 = {
   } as Record<string, [number, number]>,
 } as const;
 
+/** Standaard verhuur-aannames. */
+export const VERHUUR_DEFAULTS = {
+  /** Jaarlijkse exploitatiekosten als fractie van de jaarhuur (onderhoud, beheer, verzekering, leegstand). */
+  exploitatiekostenFractie: 0.25,
+} as const;
+
 /** Standaard verkoopkosten-aannames (flip). */
 export const VERKOOPKOSTEN_DEFAULTS = {
   /** Makelaarscourtage bij verkoop, als fractie van de verkoopprijs. */

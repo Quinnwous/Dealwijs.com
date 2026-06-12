@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { dealInputSchema } from "@/lib/schema";
 import { analyseDeal } from "@/lib/analyse";
+import { gebruikersfout } from "@/lib/fouten";
 import { checkRateLimit, clientIp } from "@/lib/ratelimit";
 
 export const runtime = "nodejs";
@@ -35,7 +36,8 @@ export async function POST(req: Request) {
     const report = await analyseDeal(parsed.data);
     return NextResponse.json(report);
   } catch (e) {
-    const message = e instanceof Error ? e.message : "Onbekende fout";
-    return NextResponse.json({ error: `Analyse mislukt: ${message}` }, { status: 502 });
+    console.error("Analyse mislukt:", e); // interne details alleen server-side
+    const fout = gebruikersfout(e);
+    return NextResponse.json({ error: fout.melding }, { status: fout.status });
   }
 }

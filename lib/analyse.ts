@@ -12,6 +12,8 @@ import {
   berekenVerhuur,
   schatWwsPunten,
   HYPOTHEEK_DEFAULTS,
+  VERHUUR_DEFAULTS,
+  VERKOOPKOSTEN_DEFAULTS,
   type AankoopkostenResultaat,
   type FlipResultaat,
   type VerhuurResultaat,
@@ -46,6 +48,8 @@ export interface DealReport {
     gereguleerdScenario?: VerhuurResultaat;
   };
   score: { oordeel: Oordeel; kernsignaal: string };
+  /** Aannames en defaults die in déze berekening zijn gebruikt (transparantie). */
+  aannames: string[];
   /** AI-laag: null wanneer er geen AI-key is — het rapport blijft dan volledig deterministisch. */
   ai: {
     verbouwSchatting: VerbouwSchatting | null;
@@ -96,17 +100,41 @@ export async function analyseDeal(
   let wws: DealReport["wws"];
   let oordeel: Oordeel;
   let kernsignaal: string;
+  const aannames: string[] = [];
+
+  // Financiering geldt voor beide doelen: opgegeven schuld wint; met hypotheek
+  // zonder bedrag → LTV-aanname op de aankoopprijs.
+  const schuld =
+    input.schuld ?? (metHypotheek ? Math.round(input.aankoopprijs * HYPOTHEEK_DEFAULTS.ltv) : 0);
+  if (metHypotheek && input.schuld == null) {
+    aannames.push(
+      `Hypotheekschuld aangenomen op ${pctKort(HYPOTHEEK_DEFAULTS.ltv)} van de aankoopprijs: €${fmt(schuld)}`,
+    );
+  }
+  if (schuld > 0 && input.hypotheekRente == null) {
+    aannames.push(
+      `Hypotheekrente aangenomen op ${pctKort(HYPOTHEEK_DEFAULTS.renteFractie)} per jaar (aflossingsvrij gerekend)`,
+    );
+  }
 
   if (input.doel === "flip") {
     const arv = input.verwachteVerkoopwaarde ?? pd.marktwaarde;
-    // Financiering: rente over de schuld gedurende de aangenomen projectduur.
-    const schuld =
-      input.schuld ?? (metHypotheek ? Math.round(input.aankoopprijs * HYPOTHEEK_DEFAULTS.ltv) : 0);
+    if (input.verwachteVerkoopwaarde == null) {
+      aannames.push(`Verkoopwaarde ná verbouwing gelijkgesteld aan de AVM-marktwaarde: €${fmt(arv)}`);
+    }
     const renteFractie =
       input.hypotheekRente != null ? input.hypotheekRente / 100 : HYPOTHEEK_DEFAULTS.renteFractie;
     const financieringskosten = schuld
       ? Math.round(schuld * renteFractie * (HYPOTHEEK_DEFAULTS.flipProjectduurMaanden / 12))
       : 0;
+    if (financieringskosten > 0) {
+      aannames.push(
+        `Rentekosten gerekend over een aangenomen projectduur van ${HYPOTHEEK_DEFAULTS.flipProjectduurMaanden} maanden`,
+      );
+    }
+    aannames.push(
+      `Verkoopkosten: ${pctKort(VERKOOPKOSTEN_DEFAULTS.makelaarcourtageFractie)} makelaarscourtage + €${fmt(VERKOOPKOSTEN_DEFAULTS.overig)} overig`,
+    );
     flip = berekenFlip({
       aankoopprijs: input.aankoopprijs,
       verbouwkosten,
@@ -118,9 +146,15 @@ export async function analyseDeal(
     ({ oordeel, kernsignaal } = scoreFlip(flip.brutoMarge, flip.rendementOpInvestering));
   } else {
     const maandhuur = input.maandhuur ?? schatHuur(pd);
-    // Financiering: opgegeven schuld wint; met hypotheek zonder bedrag → 80%-LTV-aanname.
-    const schuld =
-      input.schuld ?? (metHypotheek ? Math.round(input.aankoopprijs * HYPOTHEEK_DEFAULTS.ltv) : 0);
+    if (input.maandhuur == null) {
+      aannames.push(`Maandhuur geschat op ~0,4% van de marktwaarde: €${fmt(maandhuur)} per maand`);
+    }
+    if (!pd.wozWaarde) {
+      aannames.push("WOZ-waarde onbekend bij de bron — aankoopprijs gebruikt als grondslag voor box 3");
+    }
+    aannames.push(
+      `Exploitatiekosten gerekend als ${pctKort(VERHUUR_DEFAULTS.exploitatiekostenFractie)} van de jaarhuur (onderhoud, beheer, verzekering, leegstand)`,
+    );
     const verhuurInput = {
       aankoopprijs: input.aankoopprijs,
       maandhuur,
@@ -132,6 +166,12 @@ export async function analyseDeal(
       hypotheekRenteFractie: input.hypotheekRente != null ? input.hypotheekRente / 100 : undefined,
     };
     verhuur = berekenVerhuur(verhuurInput);
+    if (verhuur.leegwaarderatio < 1) {
+      aannames.push(
+        `Box 3: leegwaarderatio ${pctKort(verhuur.leegwaarderatio)} toegepast — verhuurde staat met huurbescherming aangenomen (regeling vervalt per 2027)`,
+      );
+    }
+    aannames.push("Box 3 gerekend zonder heffingvrij vermogen (geldt op portfolioniveau)");
 
     if (pd.m2) {
       const indicatie = schatWwsPunten({
@@ -178,6 +218,7 @@ export async function analyseDeal(
     verhuur,
     wws,
     score: { oordeel, kernsignaal },
+    aannames,
     ai: { verbouwSchatting, samenvatting: null, risicos: [] },
   };
 
@@ -209,3 +250,6 @@ function schatHuur(pd: PropertyData): number {
 
 const fmt = (n: number) => Math.round(n).toLocaleString("nl-NL");
 const pct = (f: number) => `${(f * 100).toFixed(1)}%`;
+/** Compact NL-percentage voor aanname-teksten: 0,055 → "5,5%", 0,8 → "80%". */
+const pctKort = (f: number) =>
+  `${(f * 100).toLocaleString("nl-NL", { maximumFractionDigits: 1 })}%`;

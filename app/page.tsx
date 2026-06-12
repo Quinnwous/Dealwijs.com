@@ -509,6 +509,19 @@ function Report({ report, voorbeeld = false }: { report: DealReport; voorbeeld?:
         </ul>
       </details>
 
+      {report.aannames.length > 0 && (
+        <details className="mt-3 text-sm text-ink-soft">
+          <summary className="cursor-pointer font-medium text-ink">
+            Aannames bij deze berekening
+          </summary>
+          <ul className="mt-2 list-inside list-disc space-y-1">
+            {report.aannames.map((a) => (
+              <li key={a}>{a}</li>
+            ))}
+          </ul>
+        </details>
+      )}
+
       <div className="akte-rule my-6" />
 
       <div className="flex items-center justify-between gap-4">

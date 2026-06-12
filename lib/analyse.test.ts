@@ -93,6 +93,71 @@ describe("analyseDeal (verhuur)", () => {
   });
 });
 
+describe("analyseDeal (aannames in het rapport)", () => {
+  it("benoemt alle defaults bij verhuur zonder eigen invoer", async () => {
+    const r = await analyseDeal(
+      { postcode: "1000AA", housenumber: 1, doel: "verhuur", aankoopprijs: 300_000, verbouwkosten: 0, metHypotheek: true },
+      { getPropertyData: fakePD },
+    );
+    const tekst = r.aannames.join(" | ");
+    expect(tekst).toContain("0,4%"); // maandhuur geschat
+    expect(tekst).toContain("25%"); // exploitatiekosten
+    expect(tekst).toContain("80%"); // LTV-aanname
+    expect(tekst).toContain("5,5%"); // rente-default
+  });
+
+  it("benoemt de leegwaarderatio wanneer die is toegepast", async () => {
+    const r = await analyseDeal(
+      { postcode: "1000AA", housenumber: 1, doel: "verhuur", aankoopprijs: 300_000, verbouwkosten: 0, maandhuur: 500 },
+      { getPropertyData: fakePD },
+    );
+    // jaarhuur 6.000 / WOZ 350.000 = 1,7% → ratio 79%
+    expect(r.aannames.join(" | ")).toContain("leegwaarderatio 79%");
+  });
+
+  it("flip zonder ARV en met hypotheek: marktwaarde-aanname en projectduur", async () => {
+    const r = await analyseDeal(
+      { postcode: "1000AA", housenumber: 1, doel: "flip", aankoopprijs: 300_000, verbouwkosten: 40_000, metHypotheek: true },
+      { getPropertyData: fakePD },
+    );
+    const tekst = r.aannames.join(" | ");
+    expect(tekst).toContain("marktwaarde"); // ARV = AVM-schatting
+    expect(tekst).toContain("9 maanden"); // projectduur financiering
+  });
+
+  it("WOZ onbekend: aankoopprijs als box 3-grondslag, expliciet als aanname benoemd", async () => {
+    const zonderWoz = async () => ({ ...(await fakePD()), wozWaarde: 0 });
+    const r = await analyseDeal(
+      { postcode: "1000AA", housenumber: 1, doel: "verhuur", aankoopprijs: 300_000, verbouwkosten: 0, maandhuur: 1_500 },
+      { getPropertyData: zonderWoz },
+    );
+    expect(r.waarde.wozWaarde).toBe(300_000);
+    expect(r.aannames.join(" | ")).toContain("WOZ");
+  });
+
+  it("laat aannames weg die door eigen invoer zijn vervangen", async () => {
+    const r = await analyseDeal(
+      {
+        postcode: "1000AA",
+        housenumber: 1,
+        doel: "verhuur",
+        aankoopprijs: 300_000,
+        verbouwkosten: 0,
+        maandhuur: 1_500,
+        metHypotheek: true,
+        schuld: 100_000,
+        hypotheekRente: 4.2,
+      },
+      { getPropertyData: fakePD },
+    );
+    const tekst = r.aannames.join(" | ");
+    expect(tekst).not.toContain("80%");
+    expect(tekst).not.toContain("5,5%");
+    expect(tekst).not.toContain("0,4%");
+    expect(tekst).toContain("25%"); // exploitatie blijft een aanname
+  });
+});
+
 describe("analyseDeal (AI-laag)", () => {
   it("blijft deterministisch zonder AI: ai-velden null/leeg, bron 'geen'", async () => {
     const r = await analyseDeal(
