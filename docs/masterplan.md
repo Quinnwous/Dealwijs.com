@@ -71,6 +71,10 @@ grof. Elke week wordt de eerstvolgende maand-regel uitgewerkt naar weekregels.
 - [x] Verbeterronde financiering (11-6): rentelast + cashflow ná rente +
       rendement op eigen geld (cash-on-cash) in het verhuurrapport; defaults
       5,5% rente / 80% LTV, beide overschrijfbaar. Tests 33 → 37.
+- [x] Verbeterronde robuustheid (12-6): flip-rente over projectduur; aannames-
+      sectie in het rapport (alle defaults zichtbaar); nette foutmeldingen
+      (adres niet gevonden / druk bij databron, geen interne details meer);
+      WOZ-fout geen showstopper. Demo toont nu ook financiering. Tests → 51.
 
 ### Week 25 · 15–21 jun — Live *(grotendeels al in week 24 gedaan)*
 - [x] Vercel: project gelinkt, GitHub auto-deploy, site live op dealwijs.vercel.app
