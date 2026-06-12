@@ -15,6 +15,12 @@ describe("getPropertyData (gestubde Altum-API)", () => {
     await expect(getPropertyData("9999XX", 1)).rejects.toBeInstanceOf(AdresNietGevondenError);
   }, 10_000);
 
+  it("200 zonder marktwaarde (lege Output) → AdresNietGevondenError", async () => {
+    vi.stubEnv("ALTUM_API_KEY", "test-key");
+    vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify({ Output: {} }), { status: 200 })));
+    await expect(getPropertyData("7777XX", 1)).rejects.toBeInstanceOf(AdresNietGevondenError);
+  }, 10_000);
+
   it("woz-fout is geen showstopper: rapport zonder WOZ-waarde", async () => {
     vi.stubEnv("ALTUM_API_KEY", "test-key");
     vi.stubGlobal(

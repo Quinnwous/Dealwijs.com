@@ -16,6 +16,15 @@ describe("gebruikersfout", () => {
     expect(f.melding).not.toContain("500");
   });
 
+  it("databron-rate-limit → 503 met drukte-melding", () => {
+    for (const msg of ["Altum avm gaf status 429", "Altum avm: rate limited"]) {
+      const f = gebruikersfout(new Error(msg));
+      expect(f.status).toBe(503);
+      expect(f.melding.toLowerCase()).toContain("druk");
+      expect(f.melding).not.toContain("429");
+    }
+  });
+
   it("onbekende fout → 500 generiek, zonder details", () => {
     const f = gebruikersfout(new Error("ALTUM_API_KEY ontbreekt (zet hem in .env.local)"));
     expect(f.status).toBe(500);

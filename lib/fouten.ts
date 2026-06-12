@@ -24,6 +24,12 @@ export function gebruikersfout(e: unknown): Gebruikersfout {
     };
   }
   if (e instanceof Error && e.message.startsWith("Altum")) {
+    if (/429|rate limited/.test(e.message)) {
+      return {
+        status: 503,
+        melding: "Het is even druk bij de databron. Probeer het over een minuut opnieuw.",
+      };
+    }
     return {
       status: 502,
       melding: "Woningdata ophalen lukte niet. Probeer het over een minuut opnieuw.",

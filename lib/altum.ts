@@ -104,6 +104,9 @@ export async function getPropertyData(
   );
   const a = avm.Output ?? {};
   const w = woz.Output ?? {};
+  // Sommige bronnen geven 200 met lege Output voor onbekende adressen; zonder
+  // marktwaarde is geen enkel rapportonderdeel zinvol.
+  if (!Number(a.PriceEstimation)) throw new AdresNietGevondenError();
   return {
     bagId: a.BagID,
     city: a.City,
